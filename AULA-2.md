@@ -178,4 +178,84 @@ A partir da 4ª geração, os PCs começam a se conectar.
 **Q5: Diferencie um SO de Rede de um SO Distribuído.**
 *Resposta:* No SO de Rede, as máquinas são autônomas e o usuário tem total consciência de qual máquina ele está acessando pela rede. No SO Distribuído, várias máquinas trabalham em conjunto para formar uma única imagem, e o usuário interage como se tudo fosse um único e poderoso sistema, ignorando a rede física por trás.
 
+# 🖥️ O GRANDE GUIA: SISTEMAS OPERACIONAIS MODERNOS
+> 📖 **Baseado em:** Andrew S. Tanenbaum, Herbert Bos (Páginas 5 - 13)
+> 🚀 **Foco:** Arquitetura, História e Abstração de Hardware
+> 🎓 **Material de Estudo:** 3º Semestre - Análise e Desenvolvimento de Sistemas (ADS)
+
 ---
+
+## 👨‍💻 Sobre o Repositório e o Autor
+
+Este guia foi desenvolvido como material de revisão e consulta rápida para a disciplina de Sistemas Operacionais. 
+
+* **Instituição:** FATEC Itapetininga
+* **Curso:** Análise e Desenvolvimento de Sistemas (ADS) - 3º Semestre
+* **Perfil do Autor:** Estudante de 19 anos, com forte interesse na área de tecnologia, incluindo estudos e certificação em Inteligência Artificial (Santander). Este repositório reflete o aprendizado contínuo e a paixão por entender como as máquinas funcionam por baixo dos panos.
+
+---
+
+## 🎨 1. ILUSTRAÇÃO: A ABSTRAÇÃO DO SISTEMA OPERACIONAL
+Para entender a Visão Top-Down (Máquina Estendida), veja o diagrama em ASCII abaixo, gerado para ilustrar as camadas de proteção entre o usuário e o hardware nu.
+
+```text
+=============================================================================
+                          [ ESPAÇO DO USUÁRIO ]
+=============================================================================
+       +-----------------+     +-----------------+     +-----------------+
+       |  Navegador Web  |     | Editor de Texto |     |  Jogo (Ex: RPG) |
+       +--------+--------+     +--------+--------+     +--------+--------+
+                |                       |                       |
+                v                       v                       v
+       +-----------------------------------------------------------------+
+       |                     BIBLIOTECAS PADRÃO (libc)                   |
+       +-----------------------------------------------------------------+
+                                       | (System Calls - Ex: read, write)
+=============================================================================
+                          [ ESPAÇO DO NÚCLEO (KERNEL) ]
+=============================================================================
+                                       v
+       +-----------------------------------------------------------------+
+       |                     SISTEMA OPERACIONAL                         |
+       |                                                                 |
+       |  +----------------+  +------------------+  +-----------------+  |
+       |  | Gerenc. de Mem |  | Sistema Arquivos |  | Escalonador CPU |  |
+       |  +----------------+  +------------------+  +-----------------+  |
+       +-----------------------------------------------------------------+
+                                       |
+                                       v
+       +-----------------------------------------------------------------+
+       |                       DRIVERS DE DISPOSITIVOS                   |
+       +-----------------------------------------------------------------+
+=============================================================================
+                                 [ HARDWARE NU ]
+=============================================================================
+       +------+  +-------------------+  +-------------------+  +---------+
+       | CPU  |  |    MEMÓRIA RAM    |  | DISCO RÍGIDO (HD) |  | PLACA DE|
+       |      |  | [][][][][][][][][]|  |     ( @ )         |  |   REDE  |
+       +------+  +-------------------+  +-------------------+  +---------+
+
+sequenceDiagram
+    participant Leitor de Cartão
+    participant Disco Rígido
+    participant CPU (Mainframe)
+    participant Memória RAM
+    participant Impressora
+
+    Note over Leitor de Cartão,Disco Rígido: SPOOLING (Simultaneous Peripheral Operation)
+    Leitor de Cartão->>Disco Rígido: Salva Job A
+    Leitor de Cartão->>Disco Rígido: Salva Job B
+    
+    Note over Disco Rígido,Memória RAM: MULTIPROGRAMAÇÃO
+    Disco Rígido->>Memória RAM: Carrega Job A (Partição 1)
+    Disco Rígido->>Memória RAM: Carrega Job B (Partição 2)
+    
+    Memória RAM->>CPU: Inicia Job A
+    CPU-->>Disco Rígido: Job A pede leitura de arquivo (Espera...)
+    Note over CPU: CPU ficaria ociosa aqui!
+    Memória RAM->>CPU: SO troca para o Job B Imediatamente
+    CPU->>Memória RAM: Processa Job B
+    Disco Rígido-->>Memória RAM: Arquivo do Job A chegou
+    Memória RAM->>CPU: SO volta a processar o Job A
+    
+    CPU->>Impressora: Envia resultado final
