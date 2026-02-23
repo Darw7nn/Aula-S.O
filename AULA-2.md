@@ -178,23 +178,6 @@ A partir da 4ª geração, os PCs começam a se conectar.
 **Q5: Diferencie um SO de Rede de um SO Distribuído.**
 *Resposta:* No SO de Rede, as máquinas são autônomas e o usuário tem total consciência de qual máquina ele está acessando pela rede. No SO Distribuído, várias máquinas trabalham em conjunto para formar uma única imagem, e o usuário interage como se tudo fosse um único e poderoso sistema, ignorando a rede física por trás.
 
-# 🖥️ O GRANDE GUIA: SISTEMAS OPERACIONAIS MODERNOS
-> 📖 **Baseado em:** Andrew S. Tanenbaum, Herbert Bos (Páginas 5 - 13)
-> 🚀 **Foco:** Arquitetura, História e Abstração de Hardware
-> 🎓 **Material de Estudo:** 3º Semestre - Análise e Desenvolvimento de Sistemas (ADS)
-
----
-
-## 👨‍💻 Sobre o Repositório e o Autor
-
-Este guia foi desenvolvido como material de revisão e consulta rápida para a disciplina de Sistemas Operacionais. 
-
-* **Instituição:** FATEC Itapetininga
-* **Curso:** Análise e Desenvolvimento de Sistemas (ADS) - 3º Semestre
-* **Perfil do Autor:** Estudante de 19 anos, com forte interesse na área de tecnologia, incluindo estudos e certificação em Inteligência Artificial (Santander). Este repositório reflete o aprendizado contínuo e a paixão por entender como as máquinas funcionam por baixo dos panos.
-
----
-
 ## 🎨 1. ILUSTRAÇÃO: A ABSTRAÇÃO DO SISTEMA OPERACIONAL
 Para entender a Visão Top-Down (Máquina Estendida), veja o diagrama em ASCII abaixo, gerado para ilustrar as camadas de proteção entre o usuário e o hardware nu.
 
@@ -234,7 +217,96 @@ Para entender a Visão Top-Down (Máquina Estendida), veja o diagrama em ASCII a
        | CPU  |  |    MEMÓRIA RAM    |  | DISCO RÍGIDO (HD) |  | PLACA DE|
        |      |  | [][][][][][][][][]|  |     ( @ )         |  |   REDE  |
        +------+  +-------------------+  +-------------------+  +---------+
+```
 
+---
+
+## 💻 2. CÓDIGO: HARDWARE NU VS MÁQUINA ESTENDIDA
+Para demonstrar na prática o que o Tanenbaum quer dizer quando fala que o SO facilita a vida do programador, veja a diferença nos códigos abaixo.
+
+### ❌ Como seria ler um arquivo SEM o Sistema Operacional (Pseudocódigo de Hardware Nu):
+Imagine ter que escrever isso apenas para ler um texto:
+
+```c
+/* * PSEUDOCÓDIGO DE HARDWARE NU (CAOS TOTAL)
+ * Isso é o que o SO esconde de você.
+ */
+void ler_disco_direto() {
+    // 1. Verificar se o controlador de disco está livre
+    while(ler_porta(0x1F7) & 0x80) {
+        esperar_ciclos(10);
+    }
+    
+    // 2. Enviar parâmetros físicos da agulha e setor
+    escrever_porta(0x1F2, 1);           // Ler 1 setor
+    escrever_porta(0x1F3, 0x01);        // Setor 1
+    escrever_porta(0x1F4, 0x00);        // Cilindro baixo
+    escrever_porta(0x1F5, 0x00);        // Cilindro alto
+    escrever_porta(0x1F6, 0xE0 | (0));  // Drive 0, Head 0
+    
+    // 3. Enviar o comando de leitura (0x20)
+    escrever_porta(0x1F7, 0x20);
+    
+    // 4. Esperar o disco girar e a agulha ler magneticamente
+    while(!(ler_porta(0x1F7) & 0x08)) {
+        esperar_ciclos(10);
+    }
+    
+    // 5. Transferir os bytes da porta física para a memória
+    char buffer[512];
+    for(int i = 0; i < 256; i++) {
+        int16 dado = ler_porta_16bits(0x1F0);
+        buffer[i*2] = dado & 0xFF;
+        buffer[i*2 + 1] = (dado >> 8) & 0xFF;
+    }
+}
+```
+
+### ✅ Como é ler um arquivo COM o Sistema Operacional (Máquina Estendida):
+Graças à abstração de "Arquivo" criada pelo SO, o código acima vira isso:
+
+```c
+/* * CÓDIGO COM SISTEMA OPERACIONAL (ABSTRAÇÃO)
+ * O SO fornece as chamadas de sistema (System Calls)
+ */
+#include <fcntl.h>
+#include <unistd.h>
+
+void ler_com_so() {
+    char buffer[512];
+    
+    // O SO abstrai setores e cilindros para o nome "meu_texto.txt"
+    int arquivo = open("meu_texto.txt", O_RDONLY);
+    
+    // O SO gerencia os pulsos elétricos, você só chama read()
+    read(arquivo, buffer, 512);
+    
+    // O SO libera os recursos de memória e disco
+    close(arquivo);
+}
+```
+
+---
+
+## 📈 3. DIAGRAMAS MERMAID: FLUXOS DE EXECUÇÃO
+*(Nota: O GitHub renderiza esses blocos Mermaid nativamente como gráficos de verdade!)*
+
+### Fluxo de um Sistema em Lote (Batch) da 2ª Geração
+```mermaid
+graph TD
+    A[Programador escreve em FORTRAN] --> B(Perfura Cartões de Papel);
+    B --> C{Operador Humano};
+    C -->|Leva cartões| D[Computador Auxiliar IBM 1401];
+    D -->|Grava dados| E[(Fita Magnética de Entrada)];
+    E -->|Operador carrega| F[Mainframe Principal IBM 7094];
+    F -->|Executa Jobs sem parar| G[(Fita Magnética de Saída)];
+    G -->|Operador carrega| H[Computador Auxiliar IBM 1401];
+    H -->|Imprime| I[Papel com o Resultado];
+    I --> J[Programador revisa o código];
+```
+
+### Fluxo de Multiprogramação e Spooling da 3ª Geração
+```mermaid
 sequenceDiagram
     participant Leitor de Cartão
     participant Disco Rígido
@@ -259,3 +331,95 @@ sequenceDiagram
     Memória RAM->>CPU: SO volta a processar o Job A
     
     CPU->>Impressora: Envia resultado final
+```
+
+---
+
+## ⚙️ 4. O GERENCIADOR DE RECURSOS EM DETALHES TÉCNICOS
+
+### 4.1 Multiplexação no Tempo
+Como o SO simula que vários programas rodam ao mesmo tempo com apenas um processador (CPU)?
+Ele usa uma técnica de *Time Slicing* (Fatiamento de Tempo).
+
+
+
+```text
+LINHA DO TEMPO DA CPU (Em Milissegundos):
+
+0ms       10ms      20ms      30ms      40ms      50ms      60ms
+|---------|---------|---------|---------|---------|---------|
+ [Prog A]  [Prog B]  [Prog C]  [Prog A]  [Prog B]  [Prog C]
+
+* Aos 10ms, o SO gera uma "Interrupção de Relógio".
+* O SO salva o contexto do Programa A (registradores, contadores).
+* O SO carrega o contexto do Programa B.
+* Isso é tão rápido que o usuário acha que A, B e C estão simultâneos.
+```
+
+### 4.2 Multiplexação no Espaço
+Como o SO organiza a memória física do computador?
+
+```text
+MAPA DE MEMÓRIA RAM (Multiplexação Espacial Simultânea):
+
+0xFFFFFFFF +---------------------------+
+           |       SISTEMA OPERACIONAL | <- Área protegida pelo Kernel
+0xC0000000 +===========================+ 
+           |                           |
+           |      JOGO (Programa A)    | <- Ocupa 2GB simultaneamente
+           |                           |
+0x80000000 +---------------------------+
+           |   NAVEGADOR (Programa B)  | <- Ocupa 1GB simultaneamente
+0x40000000 +---------------------------+
+           |    DISCORD (Programa C)   | <- Ocupa 500MB simultaneamente
+0x20000000 +---------------------------+
+           |          ESPAÇO LIVRE     |
+0x00000000 +---------------------------+
+```
+
+---
+
+## 🏛️ 5. LINHA DO TEMPO: O HARDWARE MOLDANDO O SOFTWARE
+
+*A evolução das gerações, linha por linha.*
+
+### GERAÇÃO 1 (1945 - 1955)
+- **Componente:** Válvulas de Vácuo.
+- **Tamanho:** Salas gigantes (Ex: ENIAC).
+- **Sistema Operacional:** Inexistente.
+- **Entrada de Dados:** Painéis de fios físicos.
+- **Paradigma:** O humano é a máquina. Se um fio estiver solto, o programa inteiro morre.
+
+### GERAÇÃO 2 (1955 - 1965)
+- **Componente:** Transistores.
+- **Tamanho:** Armários e geladeiras duplas.
+- **Sistema Operacional:** Sistemas em Lote (Batch).
+- **Entrada de Dados:** Cartões Perfurados.
+- **Paradigma:** "Não deixe a CPU esfriar". O SO foi inventado estritamente para automatizar tarefas e não desperdiçar o tempo caro do hardware.
+
+### GERAÇÃO 3 (1965 - 1980)
+- **Componente:** Circuitos Integrados (CI).
+- **Tamanho:** Geladeiras menores (Minicomputadores).
+- **Sistema Operacional:** OS/360, UNIX, MULTICS.
+- **Paradigma:** Interatividade. Surge o Time-sharing e a Multiprogramação. A CPU atende vários usuários via terminais.
+
+### GERAÇÃO 4 (1980 - Presente)
+- **Componente:** Microprocessadores (LSI / VLSI).
+- **Tamanho:** Mesas, Laptops, Celulares.
+- **Sistema Operacional:** DOS, Windows, Linux, macOS.
+- **Paradigma:** Usabilidade e GUI. O SO agora foca no usuário comum (Personal Computer) e conecta máquinas através de Redes.
+
+---
+
+## 📚 6. GLOSSÁRIO ESTENDIDO DO TANENBAUM
+Para gabaritar as provas:
+
+* **Abstração:** Ocultamento de detalhes complexos de implementação.
+* **Job (Trabalho):** Um programa a ser executado, com seus dados e instruções (termo da era dos cartões perfurados).
+* **Multiprogramação:** Manter vários Jobs na Memória RAM ao mesmo tempo. Evita ociosidade da CPU durante operações de Entrada/Saída.
+* **Time-Sharing (Tempo Compartilhado):** Sistema onde a CPU comuta rapidamente entre vários usuários em terminais.
+* **Spooling:** Usar um disco rápido como buffer em vez de esperar periféricos lentos (como leitoras de cartão ou impressoras).
+* **Modo Usuário (User-Space):** Ambiente restrito onde softwares comuns rodam.
+* **Modo Núcleo (Kernel-Space):** Ambiente de poder absoluto onde o SO opera livremente no hardware.
+
+---
