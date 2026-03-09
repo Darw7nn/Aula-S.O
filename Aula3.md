@@ -160,6 +160,6 @@ iOS (iPhones e iPads globais) : ████████████████
 | **FreeBSD / Mach**| **macOS** | `Servidor → Usuário Doméstico` | Adoção do núcleo híbrido XNU com interface gráfica avançada. |
 | **Debian** | **Ubuntu** | `SysAdmins → Usuários Leigos` | Adição de drivers fechados, ciclo de atualização e GUI facilitada. |
 | **RHEL (Red Hat)**| **CentOS** | `Enterprise Pago → Free Server` | Recompilação binária do código livre RHEL sem restrições de marca. |
-| **macOS (Darwin)**| **iOS** | `Desktop → Dispositivo Móvel` | Implementação de *Sandboxing* rígido e nova interface Multi-Touch. |
+| **macOS**| **iOS** | `Desktop → Dispositivo Móvel` | Implementação de *Sandboxing* rígido e nova interface Multi-Touch. |
 
 <br>
