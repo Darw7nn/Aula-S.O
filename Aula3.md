@@ -24,12 +24,4 @@ Além da arquitetura, analisamos o **impacto de mercado**, demonstrando como a a
 
 ### Análise de Arquitetura
 * **O Pai (Multics - 1969):** Arquitetura monolítica em mainframes para *time-sharing* massivo. Altamente complexo e acoplado ao hardware específico da época.
-* **O Filho (Unix - 1971):** Projetado por Ken Thompson e Dennis Ritchie no Bell Labs como uma antítese à complexidade do Multics. Introduziu o conceito de ferramentas modulares (utilitários que fazem apenas uma coisa, interligados via *pipes*) e o sistema hierárquico de arquivos. Foi reescrito em **C**, garantindo portabilidade para diferentes arquiteturas de processadores.
-
-### Comparativo de Escalabilidade (Estimativa Histórica de Usuários)
-```mermaid
-xychart-beta
-  title "Escala de Usuários Ativos (Fim da Década de 70)"
-  x-axis ["Multics (Máquinas Dedicadas)", "Unix (Ambientes Acadêmicos/Pesquisa)"]
-  y-axis "Milhares de Usuários" 0 --> 100
-  bar [5, 85]
+* **O Filho (Unix - 1971):** Projetado por Ken Thompson e Dennis Ritchie no Bell Labs
