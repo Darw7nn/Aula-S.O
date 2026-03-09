@@ -1,67 +1,93 @@
 <div align="center">
-  <img src="https://github.com/Anmol-Baranwal/Cool-GIFs-For-GitHub/assets/74038190/d48893bd-0757-481c-8d7e-ba3e163feae7" />
-</div>
-
-<div align="center">
-  <h1> 
-    <img src="https://user-images.githubusercontent.com/74038190/213866269-5d00981c-7c98-46d7-8a8e-16f462f15227.gif" width="50" /> 
-    Genealogia dos Sistemas Operacionais: Herança e Evolução 
-    <img src="https://user-images.githubusercontent.com/74038190/213866269-5d00981c-7c98-46d7-8a8e-16f462f15227.gif" width="50" />
-  </h1>
-</div>
-
-<div align="center">
-  <img src="https://user-images.githubusercontent.com/74038190/212749726-d36b8253-74bb-4509-870d-e29ed3b8ff4a.gif" width="500">
+  <h1>Genealogia dos Sistemas Operacionais: Herança e Evolução</h1>
   <p><em>A história da computação é marcada por sistemas que não nasceram do zero, mas sim da necessidade de evoluir, adaptar ou simplificar arquiteturas anteriores.</em></p>
+  <hr>
 </div>
+
+## 1. A Busca pela Simplicidade
+
+A transição de mainframes gigantescos para sistemas mais ágeis e portáteis.
+
+| <img src="https://img.shields.io/badge/Multics-000000?style=for-the-badge&logo=linux&logoColor=white" width="150" /> | ➔ | <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Official_UNIX_logo.svg/200px-Official_UNIX_logo.svg.png" width="120" /> |
+| :---: | :---: | :---: |
+| **O Pai: Multics** | | **O Filho: Unix** |
+
+* **Multics (1969):** O *Multiplexed Information and Computing Service* foi um projeto do MIT, Bell Labs e General Electric. O objetivo era criar um sistema operacional de tempo compartilhado (*time-sharing*) massivo, funcionando como uma concessionária de energia para centenas de usuários simultâneos.
+* **Unix (1971):** O Multics tornou-se complexo e pesado. Ken Thompson e Dennis Ritchie queriam um ambiente mais simples para continuar suas pesquisas no Bell Labs. Assim nasceu o Unix, focado em ferramentas modulares e escrito na linguagem **C**, o que o tornou altamente portátil e o grande pilar da computação moderna.
+
+<br>
+
+## 2. A Revolução dos Microcomputadores
+
+A mudança dos processadores de 8-bits para 16-bits e o início dos computadores pessoais.
+
+| <img src="https://img.shields.io/badge/CP%2FM--80-005B9F?style=for-the-badge&logo=microchip&logoColor=white" width="130" /> | ➔ | <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Microsoft_DOS.svg/200px-Microsoft_DOS.svg.png" width="150" /> |
+| :---: | :---: | :---: |
+| **O Pai: CP/M** | | **O Filho: MS-DOS** |
+
+* **CP/M (1974):** Criado por Gary Kildall para ser um sistema operacional padrão para a indústria de microcomputadores de 8 bits, abstraindo o hardware e permitindo que o mesmo software rodasse em máquinas de marcas diferentes.
+* **MS-DOS (1981):** A IBM precisava de um sistema para o IBM PC. A Microsoft comprou o **QDOS**, que era essencialmente um clone de 16 bits do CP/M, refinou seu código, introduziu o revolucionário sistema de arquivos FAT e o lançou como MS-DOS.
+
+<br>
+
+## 3. Da Sala de Aula para o Mundo
+
+A transição de um núcleo restrito focado no ensino para o maior kernel de código aberto do planeta.
+
+| <img src="https://upload.wikimedia.org/wikipedia/en/0/03/Minix3_Logo.png" width="120" /> | ➔ | <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" width="100" /> |
+| :---: | :---: | :---: |
+| **O Pai: Minix** | | **O Filho: Linux** |
+
+* **Minix (1987):** O professor Andrew S. Tanenbaum criou o Minix (baseado em arquitetura de microkernel) com propósitos puramente educacionais, para que seus alunos pudessem estudar o código-fonte de um sistema operacional completo.
+* **Linux (1991):** Linus Torvalds usava o Minix, mas queria algo que não tivesse restrições acadêmicas e aproveitasse o poder do processador 386. Ele usou o Minix como inspiração inicial e ambiente de desenvolvimento para compilar seu próprio kernel monolítico.
+
+<br>
+
+## 4. O Retorno do Rei
+
+A fusão de estabilidade de servidores robustos com interfaces gráficas de alto nível.
+
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/freebsd/freebsd-original.svg" width="100" /> | ➔ | <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg" width="90" /> |
+| :---: | :---: | :---: |
+| **Os Pais: FreeBSD / Mach** | | **O Filho: macOS** |
+
+* **FreeBSD e Mach (1985/1993):** O Mach era uma pesquisa de microkernel, e o FreeBSD uma versão robusta e de altíssima performance derivada do Unix. A empresa NeXT, fundada por Steve Jobs, combinou essas tecnologias para criar o formidável *NeXTSTEP*.
+* **macOS (2001):** A Apple precisava modernizar seus sistemas clássicos que estavam obsoletos. Ao comprar a NeXT, usaram o núcleo baseado em Mach/FreeBSD (batizado de *Darwin*) e adicionaram a interface gráfica fluida *Aqua*, criando a base do que hoje é o macOS.
+
+<br>
+
+## 5. Democratizando o Open Source
+
+O esforço para transformar sistemas de servidores voltados para *experts* em ambientes *desktop* amigáveis.
+
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/debian/debian-original.svg" width="100" /> | ➔ | <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ubuntu/ubuntu-plain.svg" width="100" /> |
+| :---: | :---: | :---: |
+| **O Pai: Debian** | | **O Filho: Ubuntu** |
+
+* **Debian (1993):** Ian Murdock criou o Debian para ser construído por uma comunidade global, sendo regido estritamente pela filosofia do Software Livre e consagrando-se como um dos sistemas mais estáveis do mercado corporativo.
+* **Ubuntu (2004):** A Canonical utilizou a base estrutural sólida do Debian para criar um sistema voltado para o usuário comum. Seu diferencial foi a instalação gráfica facilitada, ciclo de atualização previsível e drivers fechados pré-configurados.
+
+<br>
 
 ---
 
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/74038190/213760718-ca064723-1c29-4b82-985c-aadc7f57c090.gif" width="150">
+  <h2>📋 Tabela Comparativa de Arquitetura</h2>
 </div>
 
-## 1. A Busca pela Simplicidade: Multics (Pai) ➔ Unix (Filho)
-
-### 🏢 O Pai: Multics
-![Logo do Multics](imagens/multics.png)
-* **Ano de Lançamento:** 1969 (Início do desenvolvimento em 1964).
-* **Por que foi criado:** O *Multiplexed Information and Computing Service* foi um projeto do MIT, Bell Labs e General Electric. O objetivo era criar um sistema operacional de tempo compartilhado (time-sharing) massivo, funcionando como uma concessionária de energia para centenas de usuários simultâneos.
-
-### 💻 O Filho: Unix
-![Logo do Unix](imagens/unix.png)
-* **Ano de Lançamento:** 1971.
-* **Por que foi criado:** O Multics tornou-se complexo e pesado. Ken Thompson e Dennis Ritchie queriam um ambiente mais simples para continuar suas pesquisas no Bell Labs. Assim nasceu o Unix, focado em ferramentas modulares e escrito em linguagem **C**, o que o tornou altamente portátil.
+| Herança | Lançamento | Derivação | Lançamento | Principal Mudança Arquitetônica ou Filosófica |
+| :--- | :---: | :--- | :---: | :--- |
+| **Multics** | 1969 | **Unix** | 1971 | De monolítico e altamente complexo para modular, simples e escrito em C. |
+| **CP/M** | 1974 | **MS-DOS** | 1981 | Transição da arquitetura de 8-bits para 16-bits e adoção do sistema de arquivos FAT. |
+| **Minix** | 1987 | **Linux** | 1991 | De microkernel educacional restrito para kernel monolítico de código aberto e alta performance. |
+| **FreeBSD** | 1993 | **macOS** | 2001 | Integração de um robusto kernel UNIX (Darwin) com uma interface gráfica fluida para o consumidor final. |
+| **Debian** | 1993 | **Ubuntu** | 2004 | De sistema voltado estritamente a administradores para um ambiente *Desktop* *user-friendly* (*Linux for Human Beings*). |
 
 ---
 
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/74038190/212751381-b0b2320e-6ef6-4041-a77a-de279fe5d3ae.gif" width="300">
-</div>
-
-## 2. A Revolução dos Microcomputadores: CP/M (Pai) ➔ MS-DOS (Filho)
-
-### 💾 O Pai: CP/M
-![Logo do CP/M](imagens/cpm.png)
-* **Ano de Lançamento:** 1974.
-* **Por que foi criado:** Criado por Gary Kildall para ser um sistema operacional padrão para a indústria de microcomputadores de 8 bits, abstraindo o hardware e permitindo que o mesmo software rodasse em máquinas diferentes.
-
-### 🖨️ O Filho: MS-DOS
-![Logo do MS-DOS](imagens/msdos.png)
-* **Ano de Lançamento:** 1981.
-* **Por que foi criado:** A IBM precisava de um sistema para o IBM PC. A Microsoft comprou o **QDOS**, que era essencialmente um clone de 16 bits do CP/M, refinou seu código, introduziu o sistema de arquivos FAT e o lançou como MS-DOS.
-
----
-
-<div align="center">
-  <img src="https://user-images.githubusercontent.com/74038190/213911167-6bc9ef46-2950-481c-a03c-189f9506083b.gif" width="150">
-</div>
-
-## 3. Da Sala de Aula para o Mundo: Minix (Pai) ➔ Linux (Filho)
-
-### 🎓 O Pai: Minix
-![Logo do Minix](imagens/minix.png)
-* **Ano de Lançamento:** 1987.
+  <p>📚 <em>Desenvolvido para fins de pesquisa e consolidação de conhecimentos em Arquitetura de Sistemas Operacionais.</em></p>
+</div>* **Ano de Lançamento:** 1987.
 * **Por que foi criado:** O professor Andrew S. Tanenbaum criou o Minix (baseado em microkernel) com propósitos puramente educacionais, para que seus alunos pudessem estudar o código-fonte de um sistema operacional completo.
 
 ### 🐧 O Filho: Linux
