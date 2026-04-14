@@ -1,6 +1,6 @@
-
-
-https://github.com/user-attachments/assets/b5573bdc-84da-4321-9439-995d42826972
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/7410e64f-debc-4b91-a30e-7c4dca93ad9b" width="650" alt="Banner VM vs Docker">
+</p>
 
 
 
