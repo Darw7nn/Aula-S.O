@@ -1,3 +1,11 @@
+
+
+https://github.com/user-attachments/assets/b5573bdc-84da-4321-9439-995d42826972
+
+
+
+
+
 # 📄 Relatório Técnico de Engenharia e Modernização de Sistemas
 > **Projeto:** Modernização da Infraestrutura Tecnológica – Case DevStore  
 > **Status:** Parecer Técnico Final (Versão Estendida & Arquitetura Detalhada)  
