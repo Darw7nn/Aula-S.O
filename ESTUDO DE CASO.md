@@ -35,6 +35,9 @@ A estratégia recomendada é a adoção de uma arquitetura **Cloud-Native**, fun
 ## 🗺️ 4. Diagrama Estrutural da Nova Infraestrutura
 *O fluxograma abaixo compara o modelo monolítico virtualizado (Legado) com a arquitetura em nuvem conteinerizada (Proposta).*
 
+<img width="1280" height="720" alt="Image" src="https://github.com/user-attachments/assets/50d26042-1c76-4f58-acb6-8016ae93eaed" />
+
+
 ```mermaid
 graph LR
     subgraph VMs [Topologia Legada On-Premise - VMs]
