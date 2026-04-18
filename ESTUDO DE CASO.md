@@ -38,33 +38,6 @@ A estratégia recomendada é a adoção de uma arquitetura **Cloud-Native**, fun
 <img width="1280" height="720" alt="Image" src="https://github.com/user-attachments/assets/50d26042-1c76-4f58-acb6-8016ae93eaed" />
 
 
-```mermaid
-graph LR
-    subgraph VMs [Topologia Legada On-Premise - VMs]
-        A[💻 Hardware Físico Bare-Metal] --> B[⚙️ Hypervisor Type 1/2]
-        B --> C[🧱 Guest OS Completo<br>+ Payload Web]
-        B --> D[🧱 Guest OS Completo<br>+ Base de Dados]
-    end
-
-    subgraph Docker [Nova Topologia Cloud-Native - AWS]
-        E[☁️ Infraestrutura Elástica AWS] --> F[🐧 Host OS Otimizado]
-        F --> G[🐳 Docker Engine]
-        G --> H[🚀 Container Imutável<br>Microsserviço Web]
-        G --> I[🚀 Container Imutável<br>Microsserviço DB]
-    end
-
-    %% --- ESTILOS ---
-    style E fill:#0d47a1,stroke:#64b5f6,stroke-width:2px,color:#ffffff
-    style F fill:#1565c0,stroke:#64b5f6,stroke-width:2px,color:#ffffff
-    style G fill:#0288d1,stroke:#4fc3f7,stroke-width:2px,color:#ffffff
-    style H fill:#2e7d32,stroke:#81c784,stroke-width:2px,color:#ffffff
-    style I fill:#2e7d32,stroke:#81c784,stroke-width:2px,color:#ffffff
-
-    style A fill:#424242,stroke:#bdbdbd,stroke-width:2px,color:#ffffff
-    style B fill:#616161,stroke:#e0e0e0,stroke-width:2px,color:#ffffff
-    style C fill:#c62828,stroke:#ef5350,stroke-width:2px,color:#ffffff
-    style D fill:#c62828,stroke:#ef5350,stroke-width:2px,color:#ffffff
-```
 
 ---
 
@@ -115,21 +88,13 @@ Manter datacenters locais exige investimento em **CAPEX** (ativos que depreciam 
 
 #### Gráficos de Apoio Financeiro
 
-```mermaid
-xychart-beta
-    title "Comparativo de Custo Total - Primeiro Ano (R$)"
-    x-axis ["Infra Local (Física)", "AWS Cloud (OPEX)"]
-    y-axis "Reais (R$)" 0 --> 100000
-    bar [90500, 36000]
-```
 
-```mermaid
-pie title "Composição do Gasto: Infraestrutura Local"
-    "Hardware (Servidor)" : 65000
-    "Nobreak/Rack" : 12000
-    "Energia e Ar-Cond." : 8500
-    "Manutenção/Garantia" : 5000
-```
+<img width="2214" height="1115" alt="Image" src="https://github.com/user-attachments/assets/d1824644-b7c6-47e6-9f81-1e20e48d7aab" />
+
+
+
+<img width="1280" height="720" alt="Image" src="https://github.com/user-attachments/assets/ff017c8b-2900-4d1d-9930-3167b928c38b" />
+
 
 ---
 
@@ -145,14 +110,7 @@ Uma infraestrutura corporativa não se sustenta apenas com código. A transiçã
 
 ## 📊 8. Síntese Técnica Comparativa
 
-| Atributo | Máquinas Virtuais (VMs) | Containers (Docker) |
-| :--- | :--- | :--- |
-| **Nível de Abstração** | Hardware (Hypervisor) | Sistema Operacional (Kernel) |
-| **Tempo de Boot** | Minutos (Boot completo da VM) | Milissegundos (Start do processo) |
-| **Consumo de Memória** | Alto (OS Completo + App) | Baixo (Apenas Payload da App) |
-| **Gestão de Configuração** | Mutável (Sujeita a desvios) | Imutável (Definida no Dockerfile) |
-| **Portabilidade** | Restrita ao formato do Hypervisor | Universal (Cross-Platform) |
-
+<img width="1280" height="720" alt="Image" src="https://github.com/user-attachments/assets/9332f1a6-31d6-45aa-8dcc-213f5d3e26df" />
 ---
 
 ## 🚀 9. Conclusão e Roadmap de Implementação
