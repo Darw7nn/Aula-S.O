@@ -71,20 +71,6 @@ Nesta seção, dissecamos o papel fundamental de cada camada computacional, cont
 
 ## 📈 6. Análise de TCO (Custo Total de Propriedade) e Viabilidade Econômica
 
-Manter datacenters locais exige investimento em **CAPEX** (ativos que depreciam rapidamente). A migração para a AWS (IaaS) transforma a infraestrutura de TI em **OPEX** (despesa sob demanda).
-
-### Estudo de Viabilidade (Simulação High-End 1º Ano)
-
-| Categoria de Despesa | Cenário On-Premise (CAPEX) | Cenário Cloud AWS (OPEX Elastic) |
-| :--- | :--- | :--- |
-| **Ativos Físicos (Servidores, RAM ECC, NVMe)** | R$ 65.000,00 | R$ 0,00 |
-| **Facilities (Rack, Nobreak de Dupla Conversão)**| R$ 12.000,00 | R$ 0,00 |
-| **Operação Crítica (Energia e HVAC 24/7)** | ~ R$ 8.500,00 / ano | R$ 0,00 (Terceirizado) |
-| **Depreciação e Contratos de Garantia (SLA)**| ~ R$ 5.000,00 / ano | R$ 0,00 |
-| **Consumo Computacional (Instâncias EC2, RDS, Bandwidth)** | R$ 0,00 | ~ R$ 36.000,00 / ano* |
-| **TCO Estimado (Ano 1)** | **R$ 90.500,00** | **R$ 36.000,00** |
-
-> ***Nota do Arquiteto:** A abordagem em nuvem resulta em um **Saving de 60% no primeiro ano**. Mais criticamente, garante que a DevStore pague apenas pelo tráfego que consome (Elasticidade), protegendo o fluxo de caixa da startup.*
 
 #### Gráficos de Apoio Financeiro
 
@@ -98,14 +84,53 @@ Manter datacenters locais exige investimento em **CAPEX** (ativos que depreciam 
 
 ---
 
-## 🛡️ 7. Governança, Segurança e Observabilidade (DevSecOps)
+### 7.1. Gestão de Identidade e Acesso (IAM)
 
-Uma infraestrutura corporativa não se sustenta apenas com código. A transição para a AWS incluirá as seguintes práticas rigorosas:
+A primeira camada de defesa é o controle granular de quem pode fazer o quê dentro do ambiente AWS:
 
-* **Identity and Access Management (IAM):** Fim do acesso root compartilhado. Implementação de Princípio do Menor Privilégio (PoLP) para a equipe de devs.
-* **Segurança de Perímetro:** Fechamento de portas públicas diretas aos servidores, utilizando instâncias em sub-redes privadas (VPC) protegidas por *Security Groups* e *Load Balancers* públicos.
-* **Observabilidade Contínua:** Implantação do stack Prometheus + Grafana para coleta de métricas de uso (CPU/RAM dos containers) e monitoramento de saturação preditivo.
+* **Princípio do Menor Privilégio (PoLP):** cada membro da equipe recebe apenas as permissões mínimas necessárias para sua função. Um desenvolvedor front-end não tem acesso ao banco de dados de produção.
+* **Eliminação de credenciais root compartilhadas:** a conta root da AWS é selada e usada somente para operações de emergência com MFA (Multi-Factor Authentication) obrigatório.
+* **Roles por serviço:** cada serviço AWS (EC2, ECS, Lambda) opera com uma IAM Role exclusiva, impedindo que um serviço comprometido acesse recursos de outro.
+* **Rotação automática de secrets:** senhas e chaves de API armazenadas no AWS Secrets Manager com rotação automática a cada 30 dias.
 
+---
+
+### 7.2. Segurança de Perímetro e Rede (VPC)
+
+Toda a infraestrutura da DevStore será provisionada dentro de uma **Virtual Private Cloud (VPC)** isolada, seguindo o modelo de sub-redes em camadas:
+
+* **Sub-rede pública:** contém apenas o Application Load Balancer (ALB), que recebe o tráfego externo via HTTPS/TLS 1.3.
+* **Sub-rede privada:** onde residem os containers da aplicação (ECS/EC2). Inacessíveis diretamente pela internet.
+* **Sub-rede isolada:** reservada ao banco de dados RDS. Sem rota para a internet, acessível apenas pelos containers da camada de aplicação.
+* **Security Groups como firewalls stateful:** regras explícitas de entrada/saída por porta e protocolo. Nenhuma porta aberta por padrão (*deny-all* implícito).
+* **WAF (Web Application Firewall):** camada adicional no ALB para bloquear ataques OWASP Top 10 (SQL Injection, XSS, DDoS volumétrico).
+
+---
+
+### 7.3. Segurança de Imagens Docker (Supply Chain Security)
+
+Um container comprometido na origem representa um risco crítico. As seguintes práticas garantem a integridade da cadeia de fornecimento de software:
+
+* **Trivy (scanner de vulnerabilidades):** executado automaticamente na pipeline CI/CD. Bloqueia o deploy caso encontre CVEs de severidade `CRITICAL` ou `HIGH` nas imagens Docker.
+* **Amazon ECR com scan automático:** o repositório de imagens realiza análise de vulnerabilidades a cada `push`, usando dados do banco NVD (National Vulnerability Database).
+* **Imagens base minimalistas:** uso de imagens `distroless` ou `alpine`, eliminando shells, package managers e binários desnecessários que aumentam a superfície de ataque.
+* **Assinatura de imagens (Docker Content Trust):** garante que apenas imagens verificadas e assinadas pela equipe de DevOps sejam aceitas em produção.
+
+---
+
+### 7.4. Observabilidade Contínua (Stack de Monitoramento)
+
+A observabilidade vai além de saber se o serviço está no ar. O objetivo é ter visibilidade total sobre o comportamento interno dos sistemas **antes** que falhas afetem os usuários:
+
+| Ferramenta | Função | O que monitora na DevStore |
+| :--- | :--- | :--- |
+| **Prometheus** | Coleta de métricas | CPU/RAM por container, latência de API, taxa de erros HTTP |
+| **Grafana** | Visualização e dashboards | Painéis em tempo real de throughput, saturação e disponibilidade |
+| **AWS CloudWatch** | Logs centralizados | Logs de aplicação, eventos de segurança IAM, alarmes automáticos |
+| **AWS CloudTrail** | Auditoria de API | Registro imutável de todas as ações realizadas na conta AWS |
+| **PagerDuty / SNS** | Alertas e on-call | Notificação da equipe em caso de anomalia crítica (p99 > 2s) |
+
+> **⚡ Alerta preditivo:** o Prometheus será configurado com regras de alerting que disparam quando o uso de CPU ultrapassa **70% por mais de 5 minutos consecutivos** — antes de atingir o limite crítico de 90%. Isso permite escalonamento proativo via Auto Scaling Group.
 ---
 
 ## 📊 8. Síntese Técnica Comparativa
@@ -115,13 +140,73 @@ Uma infraestrutura corporativa não se sustenta apenas com código. A transiçã
 
 ## 🚀 9. Conclusão e Roadmap de Implementação
 
-A manutenção do ambiente legado representa um risco sistêmico à continuidade do negócio da DevStore. A adoção do ecossistema Linux + Docker + AWS transcende uma mera atualização de software; é uma refatoração completa da cultura de engenharia da empresa.
 
-**Próximos Passos (Plano de Ação de 30 dias):**
-1. Migração de artefatos de código para repositório centralizado (**Git/GitHub**).
-2. Escrita dos `Dockerfiles` e testes de build local.
-3. Provisionamento da infraestrutura base na AWS (VPC, Subnets, EC2/ECS).
-4. Estabelecimento da pipeline CI/CD via GitHub Actions para *deploy* automatizado.
+A migração da DevStore será executada em **quatro fases sequenciais**, cada uma com entregáveis mensuráveis e critérios de aceite claros. O modelo incremental garante que a operação do negócio nunca seja interrompida durante a transição.
 
 ---
-*Relatório de arquitetura fundamentado em padrões de mercado (Tanenbaum; AWS Well-Architected Framework; Cloud Native Computing Foundation - CNCF).*
+
+### 📅 Semana 1 — Fundação de Código e Containerização
+> **Objetivo:** garantir que toda a aplicação roda em containers localmente antes de tocar na nuvem.
+
+1. Migração de artefatos para repositório Git centralizado (GitHub). Definição de branching strategy: `main` (produção), `develop`, `feature/*`.
+2. Inventário de serviços: mapear todos os microserviços existentes, dependências externas, variáveis de ambiente e segredos.
+3. Escrita dos `Dockerfiles` para cada serviço seguindo boas práticas: multi-stage build, imagem base `alpine`, usuário não-root.
+4. Criação do `docker-compose.yml` para orquestração local completa (app + banco + cache).
+5. **Validação:** todos os serviços sobem via `docker-compose up` e passam nos testes de smoke.
+
+> ✅ **Entregável:** repositório Git com Dockerfiles validados, docker-compose funcional e documentação de variáveis de ambiente (sem secrets em plain text).
+
+---
+
+### 📅 Semana 2 — Provisionamento da Infraestrutura AWS (IaC)
+> **Objetivo:** ter o ambiente de produção provisionado como código, reproduzível e versionável.
+
+1. Criação da conta AWS com MFA e configuração de IAM Roles por serviço (princípio do menor privilégio).
+2. Escrita dos arquivos Terraform para: VPC, subnets públicas/privadas/isoladas, Security Groups, ALB e target groups.
+3. Provisionamento do Amazon ECR (repositório de imagens Docker) e do RDS (banco de dados gerenciado com backup automático).
+4. Configuração do ECS Fargate ou EC2 com Auto Scaling Group para hospedar os containers.
+5. **Validação:** infraestrutura destruída e recriada via `terraform destroy && terraform apply` sem erros.
+
+> ✅ **Entregável:** código Terraform no repositório com estado remoto no S3 + DynamoDB (lock). Diagrama de rede VPC atualizado.
+
+---
+
+### 📅 Semana 3 — Pipeline CI/CD e Ambiente de Staging
+> **Objetivo:** automatizar completamente o ciclo de build, teste e deploy.
+
+1. Configuração do GitHub Actions com workflows de: (1) lint + testes unitários a cada PR, (2) build e push de imagem Docker para ECR a cada merge em `develop`.
+2. Integração do Trivy na pipeline para scan de vulnerabilidades. Deploy bloqueado em caso de CVE `CRITICAL`.
+3. Deploy automático para o ambiente de staging (ECS staging) após aprovação no scan de segurança.
+4. Execução de testes de integração e carga no staging (ferramenta: `k6` ou `Locust`). Critério de aceite: p95 < 300ms com 100 usuários simultâneos.
+5. Configuração do stack de observabilidade: Prometheus + Grafana + CloudWatch com dashboards e alertas.
+
+> ✅ **Entregável:** pipeline CI/CD completa documentada, ambiente de staging validado com relatório de testes de carga.
+
+---
+
+### 📅 Semana 4 — Cutover para Produção e Descomissionamento Legado
+> **Objetivo:** migrar o tráfego real para a nova infraestrutura com risco mínimo.
+
+1. Snapshot completo do ambiente legado (backup de banco de dados, configurações e volumes).
+2. Execução do **Blue/Green Deployment:** ambiente AWS (Green) recebe 10% do tráfego via weighted routing no Route 53. Monitoramento por 24h.
+3. Após validação, roteamento de 100% do tráfego para o ambiente Green. Ambiente legado (Blue) mantido em standby por 7 dias.
+4. **Verificação dos critérios de Go/No-Go:** zero erros 5xx, latência p95 < 300ms, todos os alertas do Grafana no verde.
+5. Descomissionamento formal do ambiente On-Premise após período de estabilização. Documentação do post-mortem da migração.
+
+> ✅ **Entregável:** produção 100% na AWS, legado descomissionado, runbook de operações e plano de resposta a incidentes documentados.
+
+---
+
+### 📊 Resumo do Roadmap
+
+| Semana | Fase | Entregável Principal | Critério de Aceite |
+| :---: | :--- | :--- | :--- |
+| **Semana 1** | Containerização | Dockerfiles + docker-compose | Todos os serviços sobem localmente |
+| **Semana 2** | Infraestrutura IaC | Terraform + VPC + ECR + RDS | `terraform apply` sem erros, infra reproduzível |
+| **Semana 3** | CI/CD + Staging | Pipeline GitHub Actions + Grafana | p95 < 300ms em teste de carga no staging |
+| **Semana 4** | Cutover + Go-live | Produção 100% na AWS | Zero erros 5xx, legado descomissionado |
+
+---
+
+*Relatório fundamentado em: AWS Well-Architected Framework · CNCF · OWASP Top 10 · NIST Cybersecurity Framework*
+
