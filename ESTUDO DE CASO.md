@@ -199,13 +199,7 @@ A migração da DevStore será executada em **quatro fases sequenciais**, cada u
 
 ### 📊 Resumo do Roadmap
 
-| Semana | Fase | Entregável Principal | Critério de Aceite |
-| :---: | :--- | :--- | :--- |
-| **Semana 1** | Containerização | Dockerfiles + docker-compose | Todos os serviços sobem localmente |
-| **Semana 2** | Infraestrutura IaC | Terraform + VPC + ECR + RDS | `terraform apply` sem erros, infra reproduzível |
-| **Semana 3** | CI/CD + Staging | Pipeline GitHub Actions + Grafana | p95 < 300ms em teste de carga no staging |
-| **Semana 4** | Cutover + Go-live | Produção 100% na AWS | Zero erros 5xx, legado descomissionado |
-
+<img width="1004" height="627" alt="Image" src="https://github.com/user-attachments/assets/5de08897-b3f4-4056-89bc-b1fda4a869d6" />
 ---
 
 *Relatório fundamentado em: AWS Well-Architected Framework · CNCF · OWASP Top 10 · NIST Cybersecurity Framework*
